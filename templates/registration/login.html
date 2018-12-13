@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block APPTITLE %}DB Budget{% endblock %}
+
+{% block content %}
+    <section>
+        <div class="content" >
+            <div class="box">
+                {% if user.is_authenticated %}
+                    <h2>Hi {{ user.first_name }} {{ user.last_name }}!</h2>
+                    <div class="box box-button">
+                        <a href="{% url 'logout' %}">
+                            <div class="button">Logout</div>
+                        </a>
+                    </div>
+                {% else %}
+                    <h2>Login</h2>
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="button button__login">Login</button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+{% endblock %}
+

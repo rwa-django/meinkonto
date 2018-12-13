@@ -1,0 +1,198 @@
+body {
+    font-family: sans-serif;
+    background-color: #0092A6;
+    margin: 0;
+    color: white;
+}
+
+table {
+	border-collapse: collapse;
+    line-height: 1.5;
+    width: 100%;
+    color: black;
+}
+
+a {
+    text-decoration: none;
+}
+
+.ar {
+    text-align: right;
+}
+.ac {
+    text-align: center;
+}
+.al {
+    text-align: left;
+}
+h2,
+h4 {
+    font-weight: 100;
+}
+
+header {
+    background-color: #005A66;
+    display: flex;
+    justify-content: center;
+    color: white;
+}
+header.login {
+    height: auto;
+}
+header .header__menu--right {
+    _background-color: #007C8C;
+    position: absolute;
+    _padding: 15px;
+    _border: 1px solid;
+    right: 10px;
+    top: 20px;
+}
+header .header__menu--left {
+    _background-color: #007C8C;
+    position: absolute;
+    _padding: 15px;
+    _border: 1px solid;
+    left: 10px;
+    top: 20px;
+}
+
+main {
+    display: flex;
+    height: calc(100vh - 80px);
+    background-color: #0092A6;
+
+}
+
+section {
+    flex: 1;
+    justify-content: center;
+
+    xxborder: 1px solid;
+}
+footer {
+    display: flex;
+    justify-content: center;
+    font-size: 10px;
+    background-color: #005A66;
+    color: darkgrey;
+}
+
+input {
+-webkit-appearance: none;
+-moz-appearance: none;
+appearance: none;
+}
+
+input[type=text],
+input[type=number],
+input[type=password] {
+    padding:5px;
+    margin: 0 10px;
+    border: 1px solid white;
+    background-color: #00BCD4;
+    border-radius: 0;
+    font-size: 20px;
+    width: 80%;
+    text-align: center;
+    max-width: 320px;
+    min-height: 35px;
+}
+
+input[type=text]:focus,
+input[type=password]:focus {
+    border: 1px solid #005A66;
+    background-color: #00E1FF;
+    font-size: 30px;
+}
+input[type=number]:focus {
+    background-color: #00E1FF;
+    color: red;
+    font-size: 30px;
+}
+
+input.small {
+    width: 200px;
+}
+input.wider {
+    width: 100%;
+    font-size: 16px;
+    min-height: 21px;
+    margin-top: 7px;
+}
+
+.content {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    _flex-wrap: wrap;
+    margin: 0 auto;
+    background-color: #00BCD4;
+    max-width: 420px;
+
+    xxborder: 1px solid;
+}
+.box {
+    flex: 1;
+    __min-width: 100%;
+    max-width: 420px;
+    text-align: center;
+    margin: 20px 0;
+
+    xxborder: 1px solid;
+}
+
+.content__small .box {
+    margin: 10px auto;
+}
+
+.box__list {
+    margin: 20px 5px;
+}
+
+.box-button {
+    margin: 100px 0;
+    padding: 10px 0;
+}
+.button,
+input[type=submit]{
+    background:#007C8C;
+    border:0 none;
+    cursor:pointer;
+    padding: 10px 30px;
+    font-size: 18px;
+    text-decoration: none;
+    color: white;
+    width: 80%;
+    margin: 0 auto;
+    max-width: 320px;
+}
+.button__submit {
+    padding: 0 !important;
+}
+.button__login {
+    margin-top: 50px;
+}
+.button__small {
+    width: 152px;
+    margin-top: 15px;
+}
+label,
+th {
+    font-style: italic;
+    color: #007C8C;
+}
+
+main.login,
+main.app {
+    background-color: #00BCD4;
+}
+
+.text__big {
+    color: black;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.table_list th {
+    border-bottom: solid 1px #007C8C;
+}

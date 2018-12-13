@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/foundation.css' %}">
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
+
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>MyFIBU App</title>
+</head>
+<body>
+    <header class="">
+        <!-- mobile nav bar -->
+        <div class="title-bar topbar-center-logo-mobile" data-responsive-toggle="topbar-center-logo" data-hide-for="medium">
+          <div class="title-bar-left">
+            <div class="title-bar-title">{% block APPTITLE-MOB %}{% endblock %}</div>
+          </div>
+          <div class="title-bar-right">
+            <button class="menu-icon" type="button" data-toggle="topbar-center-logo"></button>
+          </div>
+        </div>
+        <!-- /mobile nav bar -->
+
+        <!-- medium and larger nav bar -->
+        <div class="top-bar topbar-center-logo" id="topbar-center-logo">
+          <div class="top-bar-left">
+            <ul class="menu vertical medium-horizontal">
+              <li><a href="/account/profile">Einstellungen</a></li>
+              <li><a href="/admin">Statistik</a></li>
+            </ul>
+          </div>
+          <div class="top-bar-center">
+              <div class="title-bar-title">{% block APPTITLE %}{% endblock %}</div>
+          </div>
+          <div class="top-bar-right">
+            <ul class="menu vertical medium-horizontal">
+              <li><a href="{% url 'logout' %}">Logout</a></li>
+            </ul>
+          </div>
+        </div>
+        <!-- /medium and larger nav bar -->
+    </header>
+
+    <article class="grid-container main">
+        <div class="grid-x align-center">
+            <div class="cell medium-8">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </article>
+    <footer class="">
+        <span>© 2019 rwalser.ch - Alle Rechte vorbehalten.</span>
+    </footer>
+
+    <script src="{% static 'js/vendor/jquery.js' %}"></script>
+    <script src="{% static 'js/vendor/what-input.js' %}"></script>
+    <script src="{% static 'js/vendor/foundation.js' %}"></script>
+    <script src="{% static 'js/app.js' %}"></script>
+
+</body>
+</html>

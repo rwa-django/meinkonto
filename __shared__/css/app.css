@@ -1,0 +1,73 @@
+.nowrap {
+    white-space: nowrap;
+}
+
+.dropdown.menu a {
+    font-weight: bold;
+    padding: 5px 8px;
+}
+
+.topbar-center-logo {
+  background: #005A66;
+}
+
+.topbar-center-logo .menu {
+  background: #005A66;
+}
+
+.topbar-center-logo .menu a {
+  color: #fefefe;
+}
+
+.topbar-center-logo .top-bar-center {
+  -webkit-flex: 1 0 auto;
+      -ms-flex: 1 0 auto;
+          flex: 1 0 auto;
+    color: #e0e0e0;
+}
+
+@media screen and (max-width: 39.9375em) {
+  .topbar-center-logo .top-bar-center {
+    display: none;
+  }
+  .main {
+    height: calc(100vh - 55px) !important;
+  }
+}
+
+.topbar-center-logo-mobile {
+  background: #005A66;
+}
+
+.topbar-center-logo-mobile .menu-icon {
+  vertical-align: text-top;
+}
+.main {
+  height: calc(100vh - 69px);
+  background-color: #0092A6;
+  margin-bottom: 0;
+}
+footer {
+    display: flex;
+    justify-content: center;
+    font-size: 10px;
+    background-color: #005A66;
+    color: darkgrey;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+}
+inputXX {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.text__big {
+    font-size: 20px;
+}
+
+.konto-type {
+    background-color: #add8e6;
+}
