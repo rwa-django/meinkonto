@@ -1,0 +1,79 @@
+{% extends "account/base.html" %}
+
+{% block APPTITLE-MOB %}
+Hoi {{ user.first_name }} {{ user.last_name }} !
+{% endblock %}
+{% block APPTITLE %}
+    {% if bt_bez == 'AC-Label' %}
+        Konto
+    {% else %}
+        Monatliches Budget
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <div class="callout primary">
+        <form action="" method="post">{% csrf_token %}
+            <div class="grid-x">
+                <div class="cell small-2"><span>Budget</span></div>
+                <div class="cell auto">
+                    <ul class="dropdown menu" data-dropdown-menu>
+                        <li>
+                            <a href="#">{{ bt_bez }}</a>
+                            {% if bt_list %}
+                                <ul class="menu">
+                                    {% for bt in bt_list %}
+                                        <li class="{% if bt.aktiv %}active{% endif %} {% if bt.type == 'A' %}konto-type{% endif %}">
+                                            <a href="{% url 'budget:type' bt.id %}" data-set-budget-typ="{{ bt.id }}">{{ bt.type }}-{{ bt.label }}</a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </li>
+                    </ul>
+                </div>
+                <div class="cell small-4"><span>für {{ month_desc }}</span></div>
+            </div>
+        </form>
+        <div class="text-center text__big" style="color: red;">{{ bk_data |stringformat:"d" }}.- CHF</div>
+
+        <div>
+            <form action="" method="post">{% csrf_token %}
+                <input class="small" type="number" name="amount" value="" placeholder="Ausgabe" />
+                <input class="wider" type="text" name="info" value=""  placeholder="Info" />
+                <input class="button expanded" type="submit" value="save" />
+            </form>
+        </div>
+
+    </div>
+    <div class="cell">
+        {% if Q_Budget_Pos %}
+            <table class="">
+                <thead>
+                    <tr>
+                        <th class="al">Datum</th>
+                        <th class="ar">CHF</th>
+                        <th class="al">Info</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for pos in Q_Budget_Pos %}
+                    <tr>
+                        <td class="nowrap">{{ pos.booking_date | date:"D d. M" }}</td>
+                        <td class="ar">
+                        {% if pos.booking_amount < 0 %}
+                            <span style="color: #737373;font-style: italic;">{{ pos.booking_amount |stringformat:"d" }}.-</span>
+                        {% else %}
+                            <span style="color: #002D33">{{ pos.booking_amount |stringformat:"d" }}.-</span>
+                        {% endif %}
+                        </td>
+                        <td class="al">{{ pos.booking_info }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>Keine Budgetpositionen vorhanden.</p>
+        {% endif %}
+    </div>
+{% endblock %}
