@@ -5,7 +5,7 @@ from . import views
 app_name = 'account'
 urlpatterns = [
     path('', views.index, name='index'),
-    # path('<int:type_id>/', views.set_budget_type, name='type'),
+    path('<int:type_id>/', views.set_account_type, name='settype'),
     #
     # path('profile', views.Profile, name='profile'),
     # path('profile/<int:type_id>/', views.select_budget_type, name='selecttype'),

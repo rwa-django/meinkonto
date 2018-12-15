@@ -4,7 +4,7 @@
 Hoi {{ user.first_name }} {{ user.last_name }} !
 {% endblock %}
 {% block APPTITLE %}
-    {% if bt_bez == 'AC-Label' %}
+    {% if bt_type == 'A' %}
         Konto
     {% else %}
         Monatliches Budget
@@ -15,7 +15,9 @@ Hoi {{ user.first_name }} {{ user.last_name }} !
     <div class="callout primary">
         <form action="" method="post">{% csrf_token %}
             <div class="grid-x">
-                <div class="cell small-2"><span>Budget</span></div>
+                <div class="cell small-2">
+                    <span>{% if bt_type == 'A' %}Konto{% else %}Budget{% endif %}</span>
+                </div>
                 <div class="cell auto">
                     <ul class="dropdown menu" data-dropdown-menu>
                         <li>
@@ -24,7 +26,7 @@ Hoi {{ user.first_name }} {{ user.last_name }} !
                                 <ul class="menu">
                                     {% for bt in bt_list %}
                                         <li class="{% if bt.aktiv %}active{% endif %} {% if bt.type == 'A' %}konto-type{% endif %}">
-                                            <a href="{% url 'budget:type' bt.id %}" data-set-budget-typ="{{ bt.id }}">{{ bt.type }}-{{ bt.label }}</a>
+                                            <a href="{% url 'account:settype' bt.id %}" data-set-budget-typ="{{ bt.id }}">{{ bt.type }}-{{ bt.label }}</a>
                                         </li>
                                     {% endfor %}
                                 </ul>
@@ -32,21 +34,42 @@ Hoi {{ user.first_name }} {{ user.last_name }} !
                         </li>
                     </ul>
                 </div>
-                <div class="cell small-4"><span>für {{ month_desc }}</span></div>
+                <div class="cell small-4">
+                    <span>{% if bt_type != 'A' %}für {{ month_desc }}{% endif %}</span></div>
             </div>
         </form>
-        <div class="text-center text__big" style="color: red;">{{ bk_data |stringformat:"d" }}.- CHF</div>
-
+        <div class="text-center">
+            <span style="font-style: italic;">Stand:&nbsp;</span>
+            {% if bk_amount < 200 %}
+                <span class="text__big" style="color: red;">{{ bk_amount |stringformat:"d" }}.-</span>
+            {% elif bk_amount < 1000 %}
+                <span class="text__big" style="color: lightsalmon;">{{ bk_amount |stringformat:"d" }}.-</span>
+            {% else %}
+                <span class="text__big">{{ bk_amount |stringformat:"d" }}.-</span>
+            {% endif %}
+            CHF
+        </div>
         <div>
             <form action="" method="post">{% csrf_token %}
-                <input class="small" type="number" name="amount" value="" placeholder="Ausgabe" />
+                {% if bt_type == 'A' %}
+                    <input class="small" type="number" name="amount" value="" placeholder="Ein / Auszahlung" />
+                {% else %}
+                    <input class="small" type="number" name="amount" value="" placeholder="Ausgabe" />
+                {% endif %}
                 <input class="wider" type="text" name="info" value=""  placeholder="Info" />
                 <input class="button expanded" type="submit" value="save" />
             </form>
+            {% if MSG %}
+                <div class="grid-x">
+                    <div class="cell text-center">
+                        <span class="label success">{{ MSG }}</span>
+                    </div>
+                </div>
+            {% endif %}
         </div>
 
     </div>
-    <div class="cell">
+    <div class="cell text-center">
         {% if Q_Budget_Pos %}
             <table class="">
                 <thead>
@@ -73,7 +96,13 @@ Hoi {{ user.first_name }} {{ user.last_name }} !
                 </tbody>
             </table>
         {% else %}
-            <p>Keine Budgetpositionen vorhanden.</p>
+            <div class="label warning">
+                {% if bt_type == 'A' %}
+                    Keine Ein- / Auszahlungs-Positionen vorhanden
+                {% else %}
+                    Keine Budget-Positionen vorhanden
+                {% endif %}
+            </div>
         {% endif %}
     </div>
 {% endblock %}
