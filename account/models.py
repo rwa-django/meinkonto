@@ -55,15 +55,17 @@ class Account(models.Model):
                                   on_delete=models.CASCADE)
     account_year = models.PositiveSmallIntegerField(default=datetime.now().year,
                                                     validators=[
-                                                        MinValueValidator(2017),
+                                                        MinValueValidator(2018),
                                                         MaxValueValidator(2050)],
                                                     help_text="Format: <YYYY>")
     account_month = models.PositiveSmallIntegerField(default=0,
                                                      validators=[
-                                                        MinValueValidator(1),
+                                                        MinValueValidator(0),
                                                         MaxValueValidator(12)],
                                                      help_text="Format: <MM>")
     account_amount = models.DecimalField(max_digits=10,
+                                         decimal_places=2)
+    current_amount = models.DecimalField(max_digits=10,
                                          decimal_places=2)
     account_info = models.CharField(max_length=200,
                                     help_text="Buchungs Info")

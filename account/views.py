@@ -8,6 +8,7 @@ from django.template.defaultfilters import date
 from django.contrib.auth.decorators import login_required
 
 from .models import Account, Account_Pos, Account_Type, Account_Base
+import decimal
 
 MSG = ''
 
@@ -97,9 +98,72 @@ def _getAccountTypes(login):
     return Account_Type.objects.values_list('id', 'label', 'aktiv', 'type', named=True).filter(login=login)
 
 
+def _getCurrentAccount(login, Q_Type_ID, actype, month, year):
+
+    month = month if actype == 'B' else 0
+
+    Q_Account = Account.objects.filter(login=login, account_type=Q_Type_ID, account_month=month, account_year=year)
+    if Q_Account:
+        ID_B = Q_Account[0].pk
+        Q_Account_Pos = Account_Pos.objects.filter(account_id=ID_B)
+
+        val = 0
+        last_pos = 1
+        for pos in Q_Account_Pos.order_by('pos'):
+            val += decimal.Decimal(pos.booking_amount)
+
+            last_pos = pos.pos
+            print(val, pos.booking_amount)
+
+        if actype == 'B':
+            account_amount = Q_Account[0].account_amount - val
+        else:
+            account_amount = Q_Account[0].current_amount
+
+
+        print('==========',account_amount)
+        # a = Account.objects.filter(login=login,
+        #                            account_type=Q_Type_ID,
+        #                            account_month=month,
+        #                            account_year=year).update(account_amount=int(account_amount))
+
+
+    else:
+        if Q_Type_ID:
+            Q_Base = Account_Base.objects.filter(login=login,
+                                                 account_type=Q_Type_ID,)
+            account_amount = Q_Base[0].account_amount
+
+            Q_Type = Account_Type.objects.filter(login=login,
+                                                 aktiv=True)
+            Q_Account = Account(login=login,
+                                account_type=Q_Type[0],
+                                account_month=month,
+                                account_year=year,
+                                account_amount=account_amount,
+                                current_amount=account_amount,
+                                account_info='Init. Monat {0}'.format(date(datetime.now(), 'F')), )
+            Q_Account.save()
+            last_pos = 0
+
+            Q_Account = Account.objects.filter(login=login, account_type=Q_Type_ID, account_month=month, account_year=year)
+
+    return {'Q_Account': Q_Account,
+            'account_amount': account_amount,
+            'last_pos': last_pos,
+            }
+
+
 # Account
 @login_required(login_url='/accounts/login/')
 def index(request):
+
+    try:
+        amount = int(request.POST['amount'])
+        info = request.POST['info']
+    except:
+        amount = 0
+        info = ''
 
     data = _initBookingDate(request.user)
 
@@ -113,7 +177,35 @@ def index(request):
 
     bt_list = _getAccountTypes(request.user)
 
-    print(bt_list)
+    # current budget
+    current_budget = _getCurrentAccount(request.user, data['Q_Type_ID'], actype, month, year)
+
+    Q_Account = current_budget['Q_Account']
+    ak_amount = int(current_budget['account_amount'])
+    last_pos = int(current_budget['last_pos'])
+
+    Q_Account_Pos = []
+    if amount != 0:
+        val = amount
+        # Type A Konto add input to Account
+        if actype == 'A':
+            val = amount * -1
+        ak_amount = ak_amount - val
+
+
+        print('--Create Account Pos %s M %s Y %s ak: %s am: %s' % (last_pos + 1, month, year, ak_amount, amount))
+
+        ap = Account_Pos(account_id=Q_Account[0], pos=last_pos + 1, booking_amount=amount, booking_info=info)
+        ap.save()
+
+        a = Account.objects.filter(login=request.user,
+                                   account_type=data['Q_Type_ID'],
+                                   account_month=0,
+                                   account_year=year).update(current_amount=int(ak_amount))
+
+
+    if Q_Account:
+        Q_Account_Pos = Account_Pos.objects.filter(account_id=Q_Account[0])
 
 
     template = loader.get_template('account/index.html')
@@ -121,11 +213,11 @@ def index(request):
         'bt_list': bt_list,
         'bt_type': actype,
         'bt_bez': label,
-        'bk_amount': value,
+        'bk_amount': ak_amount,
         'year': year,
         'month': month,
         'month_desc': date(datetime.now(), 'F'),
-        'Q_Budget_Pos': [],
+        'Q_Account_Pos': Q_Account_Pos,
         'MSG': data['MSG']
     }
 

@@ -70,7 +70,7 @@ Hoi {{ user.first_name }} {{ user.last_name }} !
 
     </div>
     <div class="cell text-center">
-        {% if Q_Budget_Pos %}
+        {% if Q_Account_Pos %}
             <table class="">
                 <thead>
                     <tr>
@@ -80,7 +80,7 @@ Hoi {{ user.first_name }} {{ user.last_name }} !
                     </tr>
                 </thead>
                 <tbody>
-                {% for pos in Q_Budget_Pos %}
+                {% for pos in Q_Account_Pos %}
                     <tr>
                         <td class="nowrap">{{ pos.booking_date | date:"D d. M" }}</td>
                         <td class="ar">

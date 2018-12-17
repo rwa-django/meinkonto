@@ -11,7 +11,7 @@ class AccountBaseAdmin(admin.ModelAdmin):
     search_fields = ('login', 'account_type',)
 
 class AccountAdmin(admin.ModelAdmin):
-    list_display = ('login', 'account_type', 'account_year', 'account_month', 'account_amount',)
+    list_display = ('login', 'account_type', 'account_year', 'account_month', 'current_amount', 'account_amount',)
     search_fields = ('login', 'account_year', 'account_month',)
 
 class AccountPosAdmin(admin.ModelAdmin):
