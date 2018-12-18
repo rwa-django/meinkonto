@@ -39,8 +39,10 @@ def _creatAccountType(login, name, type):
     Q = Account_Type.objects.filter(login=login, label=name)
 
     status = ''
-    if Q or len(name) < 2:
+    if Q:
         status = 'Error:bereits vorhanden'
+    elif len(name) < 2:
+        status = 'Error:Name zu kurz'
     else:
         AT = Account_Type(login=login,label=name,type=type,pos=pos,aktiv=aktiv)
         AT.save()
@@ -80,9 +82,15 @@ def _initBookingDate(login):
                               account_info='Init. Monat mit {0}'.format(amount),)
         Q_Base.save()
 
+    if day >= startDay:
+        if day > 15:
+            month += 1
+        if month > 12:
+            month = 1
+            year += 1
 
     return {'dd': day,
-            'mm': month,
+            'mm': month if type == 'B' else 0,
             'yyyy': year,
             'start_amount': amount,
             'start_day': startDay,
@@ -100,9 +108,11 @@ def _getAccountTypes(login):
 
 def _getCurrentAccount(login, Q_Type_ID, actype, month, year):
 
-    month = month if actype == 'B' else 0
+    if actype == 'B':
+        Q_Account = Account.objects.filter(login=login, account_type=Q_Type_ID, account_month=month, account_year=year)
+    else:
+        Q_Account = Account.objects.filter(login=login, account_type=Q_Type_ID, account_month=month)
 
-    Q_Account = Account.objects.filter(login=login, account_type=Q_Type_ID, account_month=month, account_year=year)
     if Q_Account:
         ID_B = Q_Account[0].pk
         Q_Account_Pos = Account_Pos.objects.filter(account_id=ID_B)
@@ -119,15 +129,6 @@ def _getCurrentAccount(login, Q_Type_ID, actype, month, year):
             account_amount = Q_Account[0].account_amount - val
         else:
             account_amount = Q_Account[0].current_amount
-
-
-        print('==========',account_amount)
-        # a = Account.objects.filter(login=login,
-        #                            account_type=Q_Type_ID,
-        #                            account_month=month,
-        #                            account_year=year).update(account_amount=int(account_amount))
-
-
     else:
         if Q_Type_ID:
             Q_Base = Account_Base.objects.filter(login=login,
