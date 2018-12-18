@@ -85,7 +85,7 @@ Hoi {{ user.first_name }} {{ user.last_name }} !
                         <td class="nowrap">{{ pos.booking_date | date:"D d. M" }}</td>
                         <td class="ar">
                         {% if pos.booking_amount < 0 %}
-                            <span style="color: #737373;font-style: italic;">{{ pos.booking_amount |stringformat:"d" }}.-</span>
+                            <span style="color: #cc4b37;font-style: italic;">{{ pos.booking_amount |stringformat:"d" }}.-</span>
                         {% else %}
                             <span style="color: #002D33">{{ pos.booking_amount |stringformat:"d" }}.-</span>
                         {% endif %}

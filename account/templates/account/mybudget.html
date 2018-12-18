@@ -1,0 +1,82 @@
+{% extends "account/base.html" %}
+
+{% block APPTITLE %}My FIBU{% endblock %}
+
+{% block APPTITLE-MOB %}
+<span>&nbsp;Einstellungen</span>
+{% endblock %}
+
+{% block content %}
+<section class="callout primary">
+    <div class="call">
+        {% if bt_type == 'A' %}
+            <h3>Konto anpassen</h3>
+        {% else %}
+            <h3>Budget anpassen</h3>
+        {% endif %}
+        <form action="mybudget" method="post">{% csrf_token %}
+            <div class="grid-x">
+                <div class="cell small-6">
+                    <ul class="dropdown menu" data-dropdown-menu>
+                        <li>
+                            <a href="#">{{ bt_bez }}</a>
+                            {% if bt_list %}
+                                <ul class="menu">
+                                    {% for bt in bt_list %}
+                                        <li class="{% if bt.aktiv %}active{% endif %} {% if bt.type == 'A' %}konto-type{% endif %}">
+                                            <a href="{% url 'account:choosetype' bt.id %}" data-set-budget-typ="{{ bt.id }}">{{ bt.type }}-{{ bt.label }}</a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </li>
+                    </ul>
+                </div>
+                <div class="cell small-6">
+                    <div class="text-center text__big" >{{ bk_amount |stringformat:"d" }}.- CHF</div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="cell">
+        <div class="text-right">
+            <a href="profile">zurück</a>
+        </div>
+        <div><br /></div>
+    </div>
+    <form action="" method="post">{% csrf_token %}
+        <div class="grid-container">
+            <div class="grid-x grid-padding-x">
+                {% if bt_type == 'B' %}
+                <div class="small-5 cell">
+                    <label>Starttag am
+                        <input class="wider" type="number" name="day" value="{{ bb_day }}"  placeholder="Start Tag" />
+                    </label>
+                </div>
+                {% endif %}
+                <div class="small-6 cell">
+                    <label>
+                        {% if bt_type == 'A' %}Kontostand{% else %}Monatliches Budget{% endif %}
+                        <input class="small" type="number" name="amount" value="{{ bk_amount |stringformat:'d' }}" placeholder="Budget" />
+                    </label>
+                </div>
+            </div>
+            {% if bt_type == 'B' %}
+                <legend>Soll die Anpassung auf das laufende Budget übernommen werden?</legend>
+                <input id="checkbox1" type="checkbox" name="ckb_update" value="1"><label for="checkbox1">übernehmen</label>
+            {% endif %}
+
+            <input class="button expanded" type="submit" value="save" />
+            {% if msg %}
+                <div class="grid-x">
+                    <div class="cell text-center">
+                        <span class="label success">{{ msg }}</span>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </form>
+
+
+</section>
+{% endblock content %}

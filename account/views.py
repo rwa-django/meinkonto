@@ -155,7 +155,30 @@ def _getCurrentAccount(login, Q_Type_ID, actype, month, year):
             }
 
 
+def set_account_type(request, type_id):
+
+    q = Account_Type.objects.filter(login=request.user).update(aktiv=False)
+    q = Account_Type.objects.filter(login=request.user, id=type_id).update(aktiv=True)
+
+    return redirect('/account')
+
+def choos_account_type(request, type_id):
+    q = Account_Type.objects.filter(login=request.user).update(aktiv=False)
+    q = Account_Type.objects.filter(login=request.user, id=type_id).update(aktiv=True)
+
+    Q_Type = Account_Type.objects.filter(login=request.user, id=type_id, aktiv=True)
+    print('=====Type', Q_Type[0].type)
+
+    if Q_Type[0].type == 'B':
+        return HttpResponseRedirect(reverse('account:mybudget'))
+    else:
+        return HttpResponseRedirect(reverse('account:mykonto'))
+
+
+
+###############################
 # Account
+###############################
 @login_required(login_url='/accounts/login/')
 def index(request):
 
@@ -225,10 +248,142 @@ def index(request):
     return HttpResponse(template.render(context, request))
 
 
-def set_account_type(request, type_id):
+###############################
+# Profile
+###############################
+@login_required(login_url='/accounts/login/')
+def Profile(request):
+
+    data = _initBookingDate(request.user)
+
+    current_budget = _getCurrentAccount(request.user, data['Q_Type_ID'], data['bt_type'], data['mm'], data['yyyy'])
+    ak_amount = int(current_budget['account_amount'])
+
+    bt_list = _getAccountTypes(request.user)
+
+    template = loader.get_template('account/profile.html')
+    context = {
+        'bt_list': bt_list,
+        'bt_type': data['bt_type'],
+        'bt_bez': data['bt_label'],
+        'bb_day': data['start_day'],
+        'bk_amount': ak_amount,
+    }
+
+    return HttpResponse(template.render(context, request))
+
+def select_account_type(request, type_id):
 
     q = Account_Type.objects.filter(login=request.user).update(aktiv=False)
     q = Account_Type.objects.filter(login=request.user, id=type_id).update(aktiv=True)
 
-    return redirect('/account')
+    return HttpResponseRedirect(reverse('account:profile'))
 
+###############################
+# MyBudget
+###############################
+@login_required(login_url='/accounts/login/')
+def MyBudget(request):
+
+    msg = ''
+    try:
+        amount = int(request.POST['amount'])
+        day = int(request.POST['day'])
+    except:
+        amount = 0
+        day = 0
+
+    try:
+        upd = request.POST['ckb_update']
+    except:
+        upd = '0'
+
+    data = _initBookingDate(request.user)
+    Q_Type_ID = data['Q_Type_ID']
+    start_day = int(data['start_day'])
+    start_amount = int(data['start_amount'])
+
+    if amount > 0 and day > 0:
+
+        Q_Base = Account_Base.objects.filter(login=request.user,
+                                             budget_type=Q_Type_ID, ).update(account_start_day=day, account_amount=amount)
+
+        if upd == '1':
+            Q_Budget = Account.objects.filter(login=request.user,
+                                              account_type=Q_Type_ID,
+                                              account_month=data['mm'],
+                                              account_year=data['yyyy']).update(account_amount=amount)
+        start_day = day
+        start_amount = amount
+        msg = 'Ihr Daten wurden gespeichert'
+
+    bt_list = _getAccountTypes(request.user)
+
+    template = loader.get_template('account/mybudget.html')
+    context = {
+        'bt_list': bt_list,
+        'bt_bez': data['bt_label'],
+        'bt_type': data['bt_type'],
+        'bb_day': start_day,
+        'bk_amount': start_amount,
+        'month_desc': date(datetime.now(), 'F'),
+        'msg': msg,
+    }
+
+    return HttpResponse(template.render(context, request))
+
+
+
+###############################
+# MyKonto
+###############################
+@login_required(login_url='/accounts/login/')
+def MyKonto(request):
+
+    msg = ''
+    account_amount = 0
+    current_amount = 0
+
+    try:
+        amount = int(request.POST['amount'])
+    except:
+        amount = 0
+
+    data = _initBookingDate(request.user)
+    print(data)
+
+    Q_Type = Account_Type.objects.filter(login=request.user,
+                                         aktiv=True)
+    if not Q_Type:
+        Q_Type = _initAccountType(login=request.user)
+
+    Q_Account = Account.objects.filter(login=request.user,
+                                       account_type=Q_Type[0],)
+    if Q_Account:
+        account_amount = Q_Account[0].account_amount
+        current_amount = Q_Account[0].current_amount
+
+
+
+    if amount > 0 :
+        Q_Account = Account.objects.filter(login=request.user,
+                                           account_type=Q_Type[0], ).update(current_amount=amount, account_amount=amount, account_info='Kontostand angepasst')
+
+        Q_Base = Account_Base.objects.filter(login=request.user,
+                                             account_type=Q_Type[0], ).update(account_amount=amount, account_info='Kontostand angepasst')
+
+        msg = 'Ihr Daten wurden gespeichert'
+
+    bt_list = _getAccountTypes(request.user)
+
+    template = loader.get_template('account/mykonto.html')
+    context = {
+        'bt_list': bt_list,
+        'bt_bez': data['bt_label'],
+        'bt_type': data['bt_type'],
+        'ak_amount': account_amount,
+        'ak_current': current_amount,
+        'msg': msg,
+    }
+
+    return HttpResponse(template.render(context, request))

@@ -1,0 +1,115 @@
+{% extends "account/base.html" %}
+
+{% block APPTITLE-MOB %}
+Hoi {{ user.first_name }} {{ user.last_name }} !
+{% endblock %}
+{% block APPTITLE %}
+    {% if bt_type == 'A' %}
+        Konto
+    {% else %}
+        Monatliches Budget
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<section class="">
+    <div class="callout primary">
+        {% load static %}
+        <div class="card" style="text-align: center">
+            <div class="card-section">
+                {% static "" as baseUrl %}
+                <img src="{{ baseUrl }}/img/{{ 123|make_list|random }}-logo.jpg">
+            </div>
+            <div class="card-section">
+                <h4>Hoi {{ user.first_name }} {{ user.last_name }}</h4>
+            </div>
+        </div>
+        <dl style="text-align: center">
+            <dd>
+                <form action="" method="post">{% csrf_token %}
+                    <div class="grid-x grid-margin-x">
+                        <div class="cell shrink">
+                            <span>{% if bt_type == 'A' %}Konto{% else %}Budget{% endif %}</span>
+                        </div>
+                        <div class="cell auto">
+                            <ul class="dropdown menu" data-dropdown-menu>
+                                <li>
+                                    <a href="#">{{ bt_bez }}</a>
+                                    {% if bt_list %}
+                                        <ul class="menu">
+                                            {% for bt in bt_list %}
+                                                <li class="{% if bt.aktiv %}active{% endif %} {% if bt.type == 'A' %}konto-type{% endif %}">
+                                                    <a href="{% url 'account:selecttype' bt.id %}" data-set-budget-typ="{{ bt.id }}">{{ bt.type }}-{{ bt.label }}</a>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </form>
+            </dd>
+            <dd>
+                {% if bk_amount > 0 %}
+                    <div class="text-center">
+                        <span style="font-style: italic;">Stand:&nbsp;</span>
+                        {% if bk_amount < 200 %}
+                            <span class="text__big" style="color: red;">{{ bk_amount |stringformat:"d" }}.-</span>
+                        {% elif bk_amount < 1000 %}
+                            <span class="text__big" style="color: lightsalmon;">{{ bk_amount |stringformat:"d" }}.-</span>
+                        {% else %}
+                            <span class="text__big">{{ bk_amount |stringformat:"d" }}.-</span>
+                        {% endif %}
+                        CHF
+                    </div>
+                {% else %}
+                    <span style="color: red">noch keines erfasst!</span>
+                {% endif %}
+            </dd>
+            <dd>
+                {% if bb_day > 0 %}
+                Budget beginnt am <b>{{ bb_day }}. Tag</b> vom Monat.
+                {% elif bt_type == 'B' %}
+                    <span style="color: red">noch kein Tag erfasst!</span>
+                {% endif %}
+            </dd>
+        </dl>
+        <div class="box">
+            <div class="box box-button">
+                <a href="/">
+                    <div class="button expanded">Home</div>
+                </a>
+            </div>
+        </div>
+        <br />
+        <div class="box">
+            <div class="box box-button">
+                {% if bt_type == 'B' %}
+                    <a href="mybudget">
+                        <div class="button expanded">Budget anpassen</div>
+                    </a>
+                {% else %}
+                    <a href="mykonto">
+                        <div class="button expanded">Konto anpassen</div>
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+        <br />
+        <div class="box">
+            <div class="box box-button">
+                {% if bt_type == 'B' %}
+                    <a href="budgettype">
+                        <div class="button expanded">BudgetType anpassen</div>
+                    </a>
+                {% else %}
+                    <a href="mykontotyp">
+                        <div class="button expanded">KontoType anpassen</div>
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
