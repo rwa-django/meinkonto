@@ -306,7 +306,7 @@ def MyBudget(request):
     if amount > 0 and day > 0:
 
         Q_Base = Account_Base.objects.filter(login=request.user,
-                                             budget_type=Q_Type_ID, ).update(account_start_day=day, account_amount=amount)
+                                             account_type=Q_Type_ID, ).update(account_start_day=day, account_amount=amount)
 
         if upd == '1':
             Q_Budget = Account.objects.filter(login=request.user,

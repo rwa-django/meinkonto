@@ -25,7 +25,7 @@ Hoi {{ user.first_name }} {{ user.last_name }} !
                             {% if bt_list %}
                                 <ul class="menu">
                                     {% for bt in bt_list %}
-                                        <li class="{% if bt.aktiv %}active{% endif %} {% if bt.type == 'A' %}konto-type{% endif %}">
+                                        <li class="dropdowns {% if bt.aktiv %}active{% endif %} {% if bt.type == 'A' %}konto-type{% endif %}">
                                             <a href="{% url 'account:settype' bt.id %}" data-set-budget-typ="{{ bt.id }}">{{ bt.type }}-{{ bt.label }}</a>
                                         </li>
                                     {% endfor %}
@@ -40,7 +40,7 @@ Hoi {{ user.first_name }} {{ user.last_name }} !
         </form>
         <div class="text-center">
             <span style="font-style: italic;">Stand:&nbsp;</span>
-            {% if bk_amount < 200 %}
+            {% if bk_amount <= 0 %}
                 <span class="text__big" style="color: red;">{{ bk_amount |stringformat:"d" }}.-</span>
             {% elif bk_amount < 1000 %}
                 <span class="text__big" style="color: lightsalmon;">{{ bk_amount |stringformat:"d" }}.-</span>
