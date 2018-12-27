@@ -21,12 +21,12 @@ Hoi {{ user.first_name }} {{ user.last_name }} !
                 <div class="cell auto">
                     <ul class="dropdown menu" data-dropdown-menu>
                         <li>
-                            <a href="#">{{ bt_bez }}</a>
+                            <a href="#" class="{% if bt_type == 'A' %}konto-type--col{% endif %}">{{ bt_bez }}</a>
                             {% if bt_list %}
                                 <ul class="menu">
                                     {% for bt in bt_list %}
                                         <li class="dropdowns {% if bt.aktiv %}active{% endif %} {% if bt.type == 'A' %}konto-type{% endif %}">
-                                            <a href="{% url 'account:settype' bt.id %}" data-set-budget-typ="{{ bt.id }}">{{ bt.type }}-{{ bt.label }}</a>
+                                            <a class="dropdown-sel" href="{% url 'account:settype' bt.id %}" data-set-budget-typ="{{ bt.id }}">{{ bt.label }}</a>
                                         </li>
                                     {% endfor %}
                                 </ul>

@@ -34,12 +34,12 @@ Hoi {{ user.first_name }} {{ user.last_name }} !
                         <div class="cell auto">
                             <ul class="dropdown menu" data-dropdown-menu>
                                 <li>
-                                    <a href="#">{{ bt_bez }}</a>
+                                    <a href="#" class="{% if bt_type == 'A' %}konto-type--col{% endif %}">{{ bt_bez }}</a>
                                     {% if bt_list %}
                                         <ul class="menu">
                                             {% for bt in bt_list %}
-                                                <li class="{% if bt.aktiv %}active{% endif %} {% if bt.type == 'A' %}konto-type{% endif %}">
-                                                    <a href="{% url 'account:selecttype' bt.id %}" data-set-budget-typ="{{ bt.id }}">{{ bt.type }}-{{ bt.label }}</a>
+                                                <li class="dropdowns {% if bt.aktiv %}active{% endif %} {% if bt.type == 'A' %}konto-type{% endif %}">
+                                                        <a class="dropdown-sel" href="{% url 'account:selecttype' bt.id %}" data-set-budget-typ="{{ bt.id }}">{{ bt.label }}</a>
                                                 </li>
                                             {% endfor %}
                                         </ul>
@@ -99,15 +99,9 @@ Hoi {{ user.first_name }} {{ user.last_name }} !
         <br />
         <div class="box">
             <div class="box box-button">
-                {% if bt_type == 'B' %}
-                    <a href="budgettype">
-                        <div class="button expanded">BudgetType anpassen</div>
-                    </a>
-                {% else %}
-                    <a href="mykontotyp">
-                        <div class="button expanded">KontoType anpassen</div>
-                    </a>
-                {% endif %}
+                <a href="accounttype">
+                    <div class="button expanded">KontoType anpassen</div>
+                </a>
             </div>
         </div>
     </div>

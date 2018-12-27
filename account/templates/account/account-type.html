@@ -1,0 +1,57 @@
+{% extends "account/base.html" %}
+
+{% block APPTITLE %}Mein Konto{% endblock %}
+
+{% block content %}
+<section class="callout primary">
+    <div class="cell">
+        <h3>Budget/Konto erfassen</h3>
+        <form action="{% url 'account:addaccounttype' %}" method="post">{% csrf_token %}
+            <input id="typeBudget" type="radio" name="type_update" value="B" checked="checked"><label class="budget-type--col" for="typeBudget">Budget</label>
+            <input id="typeAccount" type="radio" name="type_update" value="A"><label class="konto-type--col" for="typeAccount">Konto</label>
+            <input class="wider" type="text" name="name" value="" placeholder="Name" />
+
+            <input class="button expanded" type="submit" value="save" />
+        </form>
+    </div>
+    <div class="cell">
+        <div class="text-right">
+            <a href="profile">zurück</a>
+        </div>
+        <div><br /></div>
+    </div>
+    <div class="cell">
+        {% if type_list %}
+            <table class="">
+                <thead>
+                    <tr>
+                        <th class="al">Budget's</th>
+                        <th class="ar"></th>
+                        <th class="al"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for pos in type_list %}
+                    <tr>
+                        <td class="">
+                            <a class="{% if pos.type == 'A' %}konto-type--col{% endif %}" href="{% url 'account:updaccounttype' pos.id %}" data-set-budget-typ="{{ pos.id }}">{{ pos.label }}</a>
+
+                        </td>
+                        <td class=""></td>
+                        <td class="">
+                            {% if pos.aktiv %}
+                                aktiv
+                            {% else %}
+                                <a href="{% url 'account:settype' pos.id %}" data-set-budget-typ="{{ pos.id }}">wählen</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>Noch keine Budgets vorhanden.</p>
+        {% endif %}
+    </div>
+</section>
+{% endblock content %}

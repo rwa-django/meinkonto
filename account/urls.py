@@ -15,10 +15,8 @@ urlpatterns = [
 
     path('mybudget/<int:type_id>/', views.choos_account_type, name='choosetype'),
 
-    #
-    # path('budgettype', views.BudgetType, name='budgettype'),
-    # path('addbudgettype', views.add_BudgetType, name='addbudgettype'),
-    #
-    # path('updbudgettype/<int:bt_id>/', views.BudgetTypeUpdate, name='updbudgettype'),
+    path('accounttype', views.AccountType, name='accounttype'),
+    path('addaccounttype', views.add_AccountType, name='addaccounttype'),
+    path('updaccounttype/<int:bt_id>/', views.AccountTypeUpdate, name='updaccounttype'),
     #
 ]

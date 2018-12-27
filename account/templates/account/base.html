@@ -10,7 +10,7 @@
 
     <meta name="description" content=""/>
     <meta name="author" content=""/>
-    <title>MyFIBU App</title>
+    <title>Mein Konto App</title>
 </head>
 <body>
     <header class="">
@@ -30,7 +30,9 @@
           <div class="top-bar-left">
             <ul class="menu vertical medium-horizontal">
               <li><a href="/account/profile">Einstellungen</a></li>
-              <li><a href="/admin">Statistik</a></li>
+                {% if user.is_staff %}
+                    <li><a href="/admin">Admin</a></li>
+                {% endif %}
             </ul>
           </div>
           <div class="top-bar-center">

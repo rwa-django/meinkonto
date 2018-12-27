@@ -1,0 +1,32 @@
+{% extends "account/base.html" %}
+
+{% block APPTITLE %}Mein Konto{% endblock %}
+
+{% block content %}
+<section class="callout primary">
+    <div class="cell">
+        {% if bt_type == 'A' %}
+            <h3>Konto Name anpassen</h3>
+        {% else %}
+            <h3>Budget Name anpassen</h3>
+        {% endif %}
+        <form action="{% url 'account:updaccounttype' bt_id %}" method="post">{% csrf_token %}
+            <input class="wider" type="text" name="label" value="{{ bt_label }}" placeholder="Name" />
+            <input class="button expanded" type="submit" value="save" />
+        </form>
+    </div>
+    {% if msg %}
+        <div class="grid-x">
+            <div class="cell text-center">
+                <span class="label success">{{ msg }}</span>
+            </div>
+        </div>
+    {% endif %}
+    <div class="cell">
+        <div class="text-right">
+            <a href="/account/accounttype">zurück</a>
+        </div>
+        <div><br /></div>
+    </div>
+</section>
+{% endblock content %}

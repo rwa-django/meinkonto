@@ -58,11 +58,6 @@ footer {
     bottom: 0;
     left: 0;
 }
-inputXX {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-}
 
 .text__big {
     font-size: 20px;
@@ -72,7 +67,20 @@ inputXX {
     background-color: #add8e6;
     border: 10px #fff solid;
     border-top: 0;
-    padding: 0 !important;}
+    padding: 0 !important;
+}
+
+.konto-type--col,
+.konto-type a {
+    color: #cc8b00;
+}
+.budget-type--col {
+    color: #1779ba;
+}
+
 li.dropdowns {
     padding: 10px;
+}
+a.dropdown-sel {
+   background-color: #dee6e1
 }

@@ -65,7 +65,7 @@ def _initBookingDate(login):
     if not Q_Type:
         Q_Type = _initAccountType(login=login)
 
-    label = Q_Type[0].type + '-' + Q_Type[0].label
+    label = Q_Type[0].label
     type =  Q_Type[0].type
 
 
@@ -387,3 +387,80 @@ def MyKonto(request):
     }
 
     return HttpResponse(template.render(context, request))
+
+###############################
+# MyKontoType
+###############################
+@login_required(login_url='/accounts/login/')
+def AccountType(request):
+
+    type_list = Account_Type.objects.filter(login=request.user)
+
+    template = loader.get_template('account/account-type.html')
+    context = {'type_list': type_list,}
+
+    return HttpResponse(template.render(context, request))
+
+def add_AccountType(request):
+    name = request.POST['name']
+    type = request.POST['type_update']
+
+    msg = creat_account_type(request.user, name, type)
+
+    return HttpResponseRedirect(reverse('account:accounttype'))
+
+
+def creat_account_type(login, name, type):
+
+    last = Account_Type.objects.all().filter(login=login).last()
+    if last:
+        aktiv = False
+        pos = last.pos + 1
+    else:
+        aktiv = True
+        pos = 1
+
+    q = Account_Type.objects.filter(login=login, label=name)
+
+    status = ''
+    if q or len(name) < 2:
+        status = 'Error:bereits vorhanden'
+    else:
+        b = Account_Type(login=login,label=name,type=type,pos=pos,aktiv=aktiv)
+        b.save()
+
+    return status
+
+def AccountTypeUpdate(request, bt_id):
+    bt_label = ''
+    bt_type = 'B'
+
+    Q_Type = Account_Type.objects.filter(id=bt_id)
+    if Q_Type:
+        bt_label = Q_Type[0].label
+        bt_type = Q_Type[0].type
+
+    try:
+        label = request.POST['label']
+    except:
+        label = ''
+
+    status = ''
+    if label != '' and label != bt_label:
+
+        q = Account_Type.objects.filter(login=request.user, label=label)
+        if q or len(label) < 2:
+            status = 'Budget Name >>'  + label + '<< bereits vorhanden'
+        else:
+            Q_Type = Account_Type.objects.filter(id=bt_id).update(label=label)
+            bt_label = label
+            status = 'geändert'
+
+    template = loader.get_template('account/account-type-update.html')
+    context = {'bt_id': bt_id,
+               'bt_label': bt_label,
+               'bt_type': bt_type,
+               'msg': status,}
+
+    return HttpResponse(template.render(context, request))
+
