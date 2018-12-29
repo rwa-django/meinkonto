@@ -70,6 +70,7 @@ Hoi {{ user.first_name }} {{ user.last_name }} !
 
     </div>
     <div class="cell text-center">
+        {% load static %}
         {% if Q_Account_Pos %}
             <table class="">
                 <thead>
@@ -77,12 +78,17 @@ Hoi {{ user.first_name }} {{ user.last_name }} !
                         <th class="al">Datum</th>
                         <th class="ar">CHF</th>
                         <th class="al">Info</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
                 {% for pos in Q_Account_Pos %}
                     <tr>
-                        <td class="nowrap">{{ pos.booking_date | date:"D d. M" }}</td>
+                        <td class="nowrap text-left">
+                            <a href="{% url 'account:updaccountpos' pos.pos %}" data-update-pos={{ pos.pos }}>
+                                {{ pos.booking_date | date:"D d. M" }} {{ pos.pos }}
+                            </a>
+                        </td>
                         <td class="ar">
                         {% if pos.booking_amount < 0 %}
                             <span style="color: #cc4b37;font-style: italic;">{{ pos.booking_amount |stringformat:"d" }}.-</span>
@@ -91,6 +97,9 @@ Hoi {{ user.first_name }} {{ user.last_name }} !
                         {% endif %}
                         </td>
                         <td class="al">{{ pos.booking_info }}</td>
+                        <td class="text-right">
+                            <a href="{% url 'account:delaccountpos' pos.pos %}"><img width="24" src="{% static 'img/del.png' %}"></a>
+                        </td>
                     </tr>
                 {% endfor %}
                 </tbody>

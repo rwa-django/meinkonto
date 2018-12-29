@@ -123,7 +123,6 @@ def _getCurrentAccount(login, Q_Type_ID, actype, month, year):
             val += decimal.Decimal(pos.booking_amount)
 
             last_pos = pos.pos
-            print(val, pos.booking_amount)
 
         if actype == 'B':
             account_amount = Q_Account[0].account_amount - val
@@ -173,6 +172,7 @@ def choos_account_type(request, type_id):
         return HttpResponseRedirect(reverse('account:mybudget'))
     else:
         return HttpResponseRedirect(reverse('account:mykonto'))
+
 
 
 
@@ -247,6 +247,90 @@ def index(request):
 
     return HttpResponse(template.render(context, request))
 
+def _getInitAccount(login):
+
+    data = _initBookingDate(login)
+
+    year = data['yyyy']
+    month = data['mm']
+    day = data['dd']
+    acttype = data['bt_type']
+
+    Q_Type = Account_Type.objects.filter(login=login, aktiv=True)
+
+    return {'dd': day,
+            'mm': month,
+            'yyyy': year,
+            'bt_type': acttype,
+            'Q_Type_ID': Q_Type[0].pk,
+            }
+
+
+def upd_account_pos(request, pos):
+
+    msg = ''
+    login = request.user
+    data = _getInitAccount(login)
+
+    year = data['yyyy']
+    month = data['mm']
+    acttype = data['bt_type']
+    Q_Type_ID = data['Q_Type_ID']
+
+    try:
+        amount = int(request.POST['amount'])
+        info = request.POST['info']
+    except:
+        amount = 0
+        info = ''
+
+
+    if acttype == 'B':
+        Q_Account = Account.objects.filter(login=login, account_type=Q_Type_ID, account_month=month, account_year=year)
+    else:
+        Q_Account = Account.objects.filter(login=login, account_type=Q_Type_ID, account_month=month)
+
+    if amount != 0:
+        val = amount
+        # Type A Konto add input to Account
+        if acttype == 'A':
+            val = amount * -1
+        ap = Account_Pos.objects.filter(account_id=Q_Account[0], pos=pos).update(booking_amount=val, booking_info=info)
+
+        msg = 'Ihr Daten wurden gespeichert'
+
+    Q_Pos = Account_Pos.objects.filter(account_id=Q_Account[0], pos=pos)
+
+    context = {'POS': Q_Pos,
+               'MSG': msg,}
+
+    template = loader.get_template('account/account-upd-pos.html')
+    return HttpResponse(template.render(context, request))
+
+def del_account_pos(request, pos):
+
+    login = request.user
+    data = _getInitAccount(login)
+
+    year = data['yyyy']
+    month = data['mm']
+    acttype = data['bt_type']
+    Q_Type_ID = data['Q_Type_ID']
+
+
+    if acttype == 'B':
+        Q_Account = Account.objects.filter(login=login, account_type=Q_Type_ID, account_month=month, account_year=year)
+    else:
+        Q_Account = Account.objects.filter(login=login, account_type=Q_Type_ID, account_month=month)
+
+    Q_Pos = Account_Pos.objects.filter(account_id=Q_Account[0], pos=pos)
+    Q_Pos.delete()
+
+    msg = 'Position gelöscht'
+
+    print('--DEL POS:', Q_Pos)
+
+    return redirect('/account')
 
 ###############################
 # Profile

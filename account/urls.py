@@ -6,6 +6,9 @@ app_name = 'account'
 urlpatterns = [
     path('', views.index, name='index'),
     path('<int:type_id>/', views.set_account_type, name='settype'),
+    path('account/<int:pos>/', views.upd_account_pos, name='updaccountpos'),
+    path('account/del/<int:pos>/', views.del_account_pos, name='delaccountpos'),
+
 
     path('profile', views.Profile, name='profile'),
     path('profile/<int:type_id>/', views.select_account_type, name='selecttype'),

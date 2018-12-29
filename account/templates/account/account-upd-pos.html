@@ -1,0 +1,56 @@
+{% extends "account/base.html" %}
+
+{% block APPTITLE %}Mein Konto{% endblock %}
+
+{% block content %}
+{% load static %}
+<section class="callout primary">
+    <div class="cell">
+        <h3>Position anpassen</h3>
+    </div>
+
+    {% for pos in POS %}
+    <div class="cell">
+        <div class="grid-x grid-padding-x">
+            <div class="small-10 cell">
+                Buchung vom: {{ pos.booking_date | date:"D d. M" }}
+            </div>
+            <div class="small-2 cell text-right">
+                <a href="{% url 'account:delaccountpos' pos.pos %}"><img width="24" src="{% static 'img/del.png' %}"></a>
+            </div>
+        </div>
+        <form action="" method="post">{% csrf_token %}
+            <div class="grid-container">
+                <div class="grid-x grid-padding-x">
+                    <div class="small-5 cell">
+                        <label>CHF
+                            <input class="small" type="number" name="amount" value={{ pos.booking_amount |stringformat:"d" }} />
+                        </label>
+                    </div>
+                    <div class="small-6 cell">
+                        <label>
+                            Info
+                            <input class="wider" type="text" name="info" value="{{ pos.booking_info }}" placeholder="Info" />
+                        </label>
+                    </div>
+                    <input class="button expanded" type="submit" value="save" />
+                </div>
+                {% if MSG %}
+                    <div class="grid-x">
+                        <div class="cell text-center">
+                            <span class="label success">{{ MSG }}</span>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+    {% endfor %}
+    <div class="cell">
+        <div class="text-right">
+            <a href="/">zurück</a>
+        </div>
+        <div><br /></div>
+    </div>
+</section>
+{% endblock content %}
