@@ -350,7 +350,6 @@ def MyKonto(request):
         amount = 0
 
     data = _initBookingDate(request.user)
-    print(data)
 
     Q_Type = Account_Type.objects.filter(login=request.user,
                                          aktiv=True)
@@ -359,20 +358,20 @@ def MyKonto(request):
 
     Q_Account = Account.objects.filter(login=request.user,
                                        account_type=Q_Type[0],)
-    if Q_Account:
-        account_amount = Q_Account[0].account_amount
-        current_amount = Q_Account[0].current_amount
-
 
 
     if amount > 0 :
-        Q_Account = Account.objects.filter(login=request.user,
+        qa = Account.objects.filter(login=request.user,
                                            account_type=Q_Type[0], ).update(current_amount=amount, account_amount=amount, account_info='Kontostand angepasst')
 
-        Q_Base = Account_Base.objects.filter(login=request.user,
+        qb = Account_Base.objects.filter(login=request.user,
                                              account_type=Q_Type[0], ).update(account_amount=amount, account_info='Kontostand angepasst')
 
         msg = 'Ihr Daten wurden gespeichert'
+
+    if Q_Account:
+        account_amount = int(Q_Account[0].account_amount)
+        current_amount = Q_Account[0].current_amount
 
     bt_list = _getAccountTypes(request.user)
 
