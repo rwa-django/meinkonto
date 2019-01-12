@@ -30,6 +30,7 @@
           <div class="top-bar-left">
             <ul class="menu vertical medium-horizontal">
               <li><a href="/account/profile">Einstellungen</a></li>
+              <li><a href="/account/statistics">Statistik</a></li>
                 {% if user.is_staff %}
                     <li><a href="/admin">Admin</a></li>
                 {% endif %}
@@ -62,6 +63,8 @@
     <script src="{% static 'js/vendor/what-input.js' %}"></script>
     <script src="{% static 'js/vendor/foundation.js' %}"></script>
     <script src="{% static 'js/app.js' %}"></script>
+    <script src="{% static 'js/chart.js' %}"></script>
+
 
 </body>
 </html>

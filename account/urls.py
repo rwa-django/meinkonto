@@ -22,4 +22,6 @@ urlpatterns = [
     path('addaccounttype', views.add_AccountType, name='addaccounttype'),
     path('updaccounttype/<int:bt_id>/', views.AccountTypeUpdate, name='updaccounttype'),
     #
+    path('statistics', views.Statistics, name='statistics'),
+
 ]

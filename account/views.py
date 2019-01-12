@@ -159,7 +159,8 @@ def set_account_type(request, type_id):
     q = Account_Type.objects.filter(login=request.user).update(aktiv=False)
     q = Account_Type.objects.filter(login=request.user, id=type_id).update(aktiv=True)
 
-    return redirect('/account')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
 
 def choos_account_type(request, type_id):
     q = Account_Type.objects.filter(login=request.user).update(aktiv=False)
@@ -547,3 +548,61 @@ def AccountTypeUpdate(request, bt_id):
 
     return HttpResponse(template.render(context, request))
 
+
+###############################
+# Statistics
+###############################
+def Statistics(request):
+    monthNames = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+    monthShortNames = ['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
+
+    login = request.user
+    data = _initBookingDate(login)
+    bt_list = _getAccountTypes(request.user)
+
+    year = data['yyyy']
+    month = data['mm']
+    day = data['dd']
+    acttype = data['bt_type']
+    label = data['bt_label']
+
+    valueslist = ''
+    Q_Account = Account.objects.filter(login=login, account_type=data['Q_Type_ID'])
+    for pos in Q_Account.order_by('account_year','account_month'):
+        print('-', pos.current_amount)
+        valueslist += str(pos.current_amount) + ','
+
+    valueslist = valueslist.strip(',')
+    valueslist = valueslist.split(',')
+    print('---valueslist:', valueslist, '--[0]:', valueslist[0], len(valueslist) )
+
+    labels = ''
+    values = ''
+    if len(valueslist) < 2:
+        valueslist += '0,'
+        
+    for x in range(0, len(valueslist)):
+        if month + x > 12:
+            pos = month - 13 + x
+        else:
+            pos = month - 1 + x
+        labels += monthShortNames[pos] + ','
+
+        values += valueslist[x] + ','
+
+    labels = labels.strip(',')
+    values = values.strip(',')
+    print('===Val:', values)
+    print('---Lab:', labels)
+
+    template = loader.get_template('account/statistics.html')
+    context= {'myData': values,
+              'myLabel': labels,
+
+        'bt_list': bt_list,
+        'bt_type': acttype,
+        'bt_bez': label,
+        'MSG': data['MSG']
+    }
+
+    return HttpResponse(template.render(context, request))

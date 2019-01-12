@@ -1,0 +1,54 @@
+{% extends "account/base.html" %}
+
+{% block APPTITLE-MOB %}
+Hoi {{ user.first_name }} {{ user.last_name }} !
+{% endblock %}
+{% block APPTITLE %}
+    {% if bt_type == 'A' %}
+        Konto
+    {% else %}
+        Monatliches Budget
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <div class="callout primary">
+        <form action="" method="post">{% csrf_token %}
+            <div class="grid-x">
+                <div class="cell small-2">
+                    <span>{% if bt_type == 'A' %}Konto{% else %}Budget{% endif %}</span>
+                </div>
+                <div class="cell auto">
+                    <ul class="dropdown menu" data-dropdown-menu>
+                        <li>
+                            <a href="#" class="{% if bt_type == 'A' %}konto-type--col{% endif %}">{{ bt_bez }}</a>
+                            {% if bt_list %}
+                                <ul class="menu">
+                                    {% for bt in bt_list %}
+                                        <li class="dropdowns {% if bt.aktiv %}active{% endif %} {% if bt.type == 'A' %}konto-type{% endif %}">
+                                            <a class="dropdown-sel" href="{% url 'account:settype' bt.id %}" data-set-budget-typ="{{ bt.id }}">{{ bt.label }}</a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </li>
+                    </ul>
+                </div>
+                <div class="cell small-4">
+                    <span>{% if bt_type != 'A' %}für {{ month_desc }}{% endif %}</span></div>
+            </div>
+        </form>
+        </div>
+    </div>
+
+            {% load static %}
+            <script src="{% static 'js/Chart.min.js' %}"></script>
+
+            <div class="row">
+              <div class="chart__container">
+                <input type="hidden" id="myData" name="variable" value="{{ myData }}">
+                <input type="hidden" id="myLabel" name="variable" value="{{ myLabel }}">
+                <canvas id="chart" width="350" height="300"></canvas>
+              </div>
+            </div>
+{% endblock %}
