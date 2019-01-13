@@ -51,12 +51,12 @@ Hoi {{ user.first_name }} {{ user.last_name }} !
         </div>
         <div>
             <form action="" method="post">{% csrf_token %}
+                <input class="wider" type="text" name="info" value=""  placeholder="Info" />
                 {% if bt_type == 'A' %}
                     <input class="small" type="number" name="amount" value="" placeholder="Ein / Auszahlung" />
                 {% else %}
                     <input class="small" type="number" name="amount" value="" placeholder="Ausgabe" />
                 {% endif %}
-                <input class="wider" type="text" name="info" value=""  placeholder="Info" />
                 <input class="button expanded" type="submit" value="save" />
             </form>
             {% if MSG %}

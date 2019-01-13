@@ -567,20 +567,22 @@ def Statistics(request):
     label = data['bt_label']
 
     valueslist = ''
+    monthlist = ''
     Q_Account = Account.objects.filter(login=login, account_type=data['Q_Type_ID'])
     for pos in Q_Account.order_by('account_year','account_month'):
-        print('-', pos.current_amount)
+        print('-', pos.current_amount, pos.account_year, pos.account_month)
         valueslist += str(pos.current_amount) + ','
+        monthlist = monthlist + ',' + str(pos.account_month)
 
     valueslist = valueslist.strip(',')
     valueslist = valueslist.split(',')
-    print('---valueslist:', valueslist, '--[0]:', valueslist[0], len(valueslist) )
+    print('-m-', monthlist, '---valueslist:', valueslist, '--[0]:', valueslist[0], len(valueslist) )
 
     labels = ''
     values = ''
     if len(valueslist) < 2:
         valueslist += '0,'
-        
+
     for x in range(0, len(valueslist)):
         if month + x > 12:
             pos = month - 13 + x
@@ -593,7 +595,7 @@ def Statistics(request):
     labels = labels.strip(',')
     values = values.strip(',')
     print('===Val:', values)
-    print('---Lab:', labels)
+    print('---Lab:', labels, month)
 
     template = loader.get_template('account/statistics.html')
     context= {'myData': values,
@@ -602,6 +604,7 @@ def Statistics(request):
         'bt_list': bt_list,
         'bt_type': acttype,
         'bt_bez': label,
+        'month_desc': date(datetime.now(), 'F'),
         'MSG': data['MSG']
     }
 

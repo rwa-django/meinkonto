@@ -35,20 +35,22 @@ Hoi {{ user.first_name }} {{ user.last_name }} !
                     </ul>
                 </div>
                 <div class="cell small-4">
-                    <span>{% if bt_type != 'A' %}für {{ month_desc }}{% endif %}</span></div>
+                    <a href="/">
+                        <div class="text-right">zurück</div>
+                    </a>
+                </div>
             </div>
         </form>
-        </div>
+        <h3>Ausgaben</h3>
     </div>
+    {% load static %}
+    <script src="{% static 'js/Chart.min.js' %}"></script>
 
-            {% load static %}
-            <script src="{% static 'js/Chart.min.js' %}"></script>
-
-            <div class="row">
-              <div class="chart__container">
-                <input type="hidden" id="myData" name="variable" value="{{ myData }}">
-                <input type="hidden" id="myLabel" name="variable" value="{{ myLabel }}">
-                <canvas id="chart" width="350" height="300"></canvas>
-              </div>
-            </div>
+    <div class="row">
+      <div class="chart__container">
+        <input type="hidden" id="myData" name="variable" value="{{ myData }}">
+        <input type="hidden" id="myLabel" name="variable" value="{{ myLabel }}">
+        <canvas id="chart" width="350" height="300"></canvas>
+      </div>
+    </div>
 {% endblock %}
