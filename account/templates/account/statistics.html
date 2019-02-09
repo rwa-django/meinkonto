@@ -41,8 +41,8 @@ Hoi {{ user.first_name }} {{ user.last_name }} !
                 </div>
             </div>
         </form>
-        <h3>Ausgaben</h3>
     </div>
+    <h3 class="text__titile text-center konto-type--col">Monatliche Ausgaben</h3>
     {% load static %}
     <script src="{% static 'js/Chart.min.js' %}"></script>
 
@@ -53,4 +53,11 @@ Hoi {{ user.first_name }} {{ user.last_name }} !
         <canvas id="chart" width="350" height="300"></canvas>
       </div>
     </div>
+
+    <a href="">
+        <div class="button">mehr</div>
+    </a>
+    <a href="">
+        <div class="button">täglich</div>
+    </a>
 {% endblock %}

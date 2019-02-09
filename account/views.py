@@ -108,6 +108,8 @@ def _getAccountTypes(login):
 
 def _getCurrentAccount(login, Q_Type_ID, actype, month, year):
 
+    print('-', actype, month, year)
+
     if actype == 'B':
         Q_Account = Account.objects.filter(login=login, account_type=Q_Type_ID, account_month=month, account_year=year)
     else:
@@ -122,12 +124,15 @@ def _getCurrentAccount(login, Q_Type_ID, actype, month, year):
         for pos in Q_Account_Pos.order_by('pos'):
             val += decimal.Decimal(pos.booking_amount)
 
+            print('----', val, pos.pos, pos.booking_amount)
+
             last_pos = pos.pos
 
         if actype == 'B':
             account_amount = Q_Account[0].account_amount - val
         else:
-            account_amount = Q_Account[0].current_amount
+            account_amount = Q_Account[0].current_amount - val
+        print(actype, '--', account_amount)
     else:
         if Q_Type_ID:
             Q_Base = Account_Base.objects.filter(login=login,
