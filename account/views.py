@@ -131,7 +131,7 @@ def _getCurrentAccount(login, Q_Type_ID, actype, month, year):
         if actype == 'B':
             account_amount = Q_Account[0].account_amount - val
         else:
-            account_amount = Q_Account[0].current_amount - val
+            account_amount = Q_Account[0].current_amount + val
         print(actype, '--', account_amount)
     else:
         if Q_Type_ID:
